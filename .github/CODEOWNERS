@@ -1,0 +1,7 @@
+# Code owners for the osskn播放器 project
+* @OSSKn4w7
+
+# Specific areas
+.github/workflows/ @OSSKn4w7
+app/src/main/java/ @OSSKn4w7
+app/build.gradle @OSSKn4w7
