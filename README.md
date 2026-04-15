@@ -50,6 +50,25 @@ The app follows a clean architecture with:
 2. Open in Android Studio Hedgehog or later
 3. Build and run on Android 13+ devices
 
+## Building the Project
+
+The project includes a keystore for local development with the following credentials:
+- Keystore password: `osskn4w7`
+- Key alias: `osskn4w7`
+- Key password: `osskn4w7`
+
+For production builds, replace the keystore with your own signing key.
+
+## CI/CD Pipeline
+
+The project includes GitHub Actions workflows for automated building, testing, and releasing:
+- `.github/workflows/build.yml` - Builds debug and release APKs
+- `.github/workflows/test.yml` - Runs unit and instrumented tests
+- `.github/workflows/lint.yml` - Performs code quality checks
+- `.github/workflows/release.yml` - Builds and signs release APKs
+
+To enable the release workflow, configure the required repository secrets as described in the documentation.
+
 ## Dependencies
 
 - Kotlin and Jetpack Compose
