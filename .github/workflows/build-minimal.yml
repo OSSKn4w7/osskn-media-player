@@ -32,7 +32,7 @@ jobs:
 
     - name: Generate dummy keystore
       run: |
-        keytool -genkey -v -keystore osskn4w7.keystore -alias osskn4w7 -keyalg RSA -keysize 2048 -validity 10000 -storepass osskn4w7 -keypass osskn4w7 -dname "CN=osskn4w7, OU=Dev, O=osskn, L=, ST=, C="
+        keytool -genkey -v -keystore osskn4w7.keystore -alias osskn4w7 -keyalg RSA -keysize 2048 -validity 10000 -storepass osskn4w7 -keypass osskn4w7 -dname "CN=osskn4w7, OU=Development, O=osskn4w7, L=, ST=, C=US"
 
     - name: Check Gradle wrapper
       run: |
@@ -40,5 +40,4 @@ jobs:
 
     - name: Build Debug APK
       run: |
-        ls -la
         ./gradlew assembleDebug --stacktrace

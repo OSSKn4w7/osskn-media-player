@@ -9,10 +9,19 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('../osskn4w7.keystore')
-            storePassword 'osskn4w7'
-            keyAlias 'osskn4w7'
-            keyPassword 'osskn4w7'
+            // Only use real keystore for local builds, use debug for CI
+            if (project.hasProperty('localBuild')) {
+                storeFile file('../osskn4w7.keystore')
+                storePassword 'osskn4w7'
+                keyAlias 'osskn4w7'
+                keyPassword 'osskn4w7'
+            } else {
+                // For CI/CD, use debug keystore
+                storeFile file('src/main/config/debug.keystore')
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            }
         }
     }
 
