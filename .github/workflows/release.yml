@@ -1,0 +1,92 @@
+name: Build Release APK
+
+on:
+  workflow_dispatch:  # Allows manual triggering
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'beta'
+        type: choice
+        options:
+        - alpha
+        - beta
+        - stable
+      tag_name:
+        description: 'Tag name (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        packages: tools, platform-tools, build-tools, platforms
+        cmdline-tools: true
+
+    - name: Decode Keystore
+      run: |
+        echo "${{ secrets.SIGNING_KEY }}" | base64 -di > app/keystore.jks
+
+    - name: Update Gradle Properties
+      run: |
+        echo "KEYSTORE_FILE=keystore.jks" >> gradle.properties
+        echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
+        echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> gradle.properties
+        echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> gradle.properties
+
+    - name: Grant execute permissions to gradlew
+      run: chmod +x gradlew
+
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+
+    - name: Sign Release APK
+      run: ./gradlew signRelease
+
+    - name: Build Bundle
+      run: ./gradlew bundleRelease
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts-${{ inputs.tag_name }}
+        path: |
+          app/build/outputs/apk/release/
+          app/build/outputs/bundle/release/
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ inputs.tag_name }}
+        name: Release ${{ inputs.tag_name }}
+        body: |
+          ## Release Notes
+          
+          This is the ${{ inputs.release_type }} release of osskn播放器.
+          
+          ### Changes in this release:
+          - Feature 1
+          - Feature 2
+          - Bug fixes
+          
+          ### Download
+          - [APK](app/build/outputs/apk/release/app-release.apk)
+        draft: false
+        prerelease: ${{ inputs.release_type != 'stable' }}
+        files: |
+          app/build/outputs/apk/release/app-release.apk
+          app/build/outputs/bundle/release/app-release.aab
