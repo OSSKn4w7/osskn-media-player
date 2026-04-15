@@ -28,7 +28,9 @@ jobs:
         build-tools-version: "34.0.0"
 
     - name: Grant execute permissions to gradlew
-      run: chmod +x gradlew
+      run: |
+        chmod +x ./gradlew
+        ls -la ./gradlew
 
     - name: Generate debug keystore
       run: |
