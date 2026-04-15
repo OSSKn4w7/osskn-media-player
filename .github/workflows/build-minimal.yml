@@ -27,13 +27,15 @@ jobs:
         api-level: 34
         build-tools-version: "34.0.0"
 
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
+    - name: Install Gradle
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        gradle-version: '8.0'
 
-    - name: Check Gradle wrapper
+    - name: Check Gradle version
       run: |
-        ./gradlew --version
+        gradle --version
 
     - name: Build Debug APK
       run: |
-        ./gradlew assembleDebug --stacktrace
+        gradle assembleDebug --stacktrace
