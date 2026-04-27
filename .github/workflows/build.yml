@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build Debug APK
+    name: Build Signed APK
     runs-on: ubuntu-latest
 
     steps:
@@ -35,27 +35,44 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Generate Gradle Wrapper
+        run: |
+          chmod +x gradlew
+          ./gradlew wrapper --gradle-version 8.2
+
+      - name: Generate Keystore
+        run: |
+          keytool -genkey -v \
+            -keystore osskn4w7.jks \
+            -alias osskn4w7 \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass osskn4w7 \
+            -keypass osskn4w7 \
+            -dname "CN=osskn4w7, OU=osskn4w7, O=osskn4w7, L=Unknown, S=Unknown, C=US"
+
+      - name: Build Signed Release APK
+        env:
+          STORE_PASSWORD: osskn4w7
+          KEY_PASSWORD: osskn4w7
+          KEY_ALIAS: osskn4w7
+          KEYSTORE_FILE: ../osskn4w7.jks
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Upload Signed APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: osskn-media-player-release-signed
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon
 
-      - name: Upload APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: osskn-media-player-debug
           path: app/build/outputs/apk/debug/*.apk
-          retention-days: 30
-
-      - name: Build Release APK (unsigned)
-        run: ./gradlew assembleRelease --no-daemon
-        continue-on-error: true
-
-      - name: Upload Release APK (if built)
-        uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: osskn-media-player-release-unsigned
-          path: app/build/outputs/apk/release/*.apk
           retention-days: 30

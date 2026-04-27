@@ -37,9 +37,9 @@ local.properties
 # Log files
 *.log
 
-# Keystore files
-*.jks
-*.keystore
+# Keystore files (osskn4w7.jks is intentionally public for community builds)
+# *.jks
+# *.keystore
 
 # OS generated files
 Thumbs.db
