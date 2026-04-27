@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.osskn.mediaplayer.model.MediaFile
+import com.osskn.mediaplayer.ui.utils.formatDuration
 
 enum class PlayMode {
     SEQUENCE, REPEAT_ONE, SHUFFLE
@@ -64,7 +65,6 @@ fun FullScreenPlayer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // 顶部关闭按钮
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -74,7 +74,6 @@ fun FullScreenPlayer(
             }
         }
 
-        // 专辑封面
         Surface(
             modifier = Modifier
                 .size(280.dp)
@@ -82,17 +81,19 @@ fun FullScreenPlayer(
             shape = MaterialTheme.shapes.large,
             color = MaterialTheme.colorScheme.surfaceVariant
         ) {
-            Icon(
-                imageVector = Icons.Default.MusicNote,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(120.dp)
-                    .align(Alignment.Center),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MusicNote,
+                    contentDescription = null,
+                    modifier = Modifier.size(120.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
-        // 歌曲信息
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -114,7 +115,6 @@ fun FullScreenPlayer(
             )
         }
 
-        // 进度条
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -141,7 +141,6 @@ fun FullScreenPlayer(
             }
         }
 
-        // 控制按钮
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,

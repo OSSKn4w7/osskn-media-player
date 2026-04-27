@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.osskn.mediaplayer.model.MediaFile
+import com.osskn.mediaplayer.ui.utils.formatDuration
 
 @Composable
 fun VideoGridItem(

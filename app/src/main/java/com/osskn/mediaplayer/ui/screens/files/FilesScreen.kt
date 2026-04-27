@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.osskn.mediaplayer.model.CustomFolder
 import com.osskn.mediaplayer.model.MediaFile
+import com.osskn.mediaplayer.ui.utils.formatFileSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,10 +53,7 @@ fun FilesScreen(
                         Icon(Icons.Default.CreateNewFolder, contentDescription = "新建文件夹")
                     }
                     IconButton(onClick = onScanClick) {
-                        Icon(
-                            Icons.Default.Folder,
-                            contentDescription = "扫描"
-                        )
+                        Icon(Icons.Default.Folder, contentDescription = "扫描")
                     }
                 }
             )
@@ -74,7 +72,6 @@ fun FilesScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                // 自定义文件夹
                 if (folders.isNotEmpty()) {
                     item {
                         Text(
@@ -91,7 +88,6 @@ fun FilesScreen(
                     }
                 }
 
-                // 媒体文件
                 if (files.isNotEmpty()) {
                     item {
                         Text(
@@ -181,14 +177,5 @@ private fun FileListItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-    }
-}
-
-private fun formatFileSize(size: Long): String {
-    return when {
-        size < 1024 -> "$size B"
-        size < 1024 * 1024 -> "${size / 1024} KB"
-        size < 1024 * 1024 * 1024 -> "${size / (1024 * 1024)} MB"
-        else -> "${size / (1024 * 1024 * 1024)} GB"
     }
 }

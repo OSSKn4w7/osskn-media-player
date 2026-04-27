@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Settings
@@ -73,7 +73,7 @@ fun ImagesScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                itemsIndexed(imageFiles, key = { _, item -> item.id }) { index, mediaFile ->
+                itemsIndexed(imageFiles) { index, mediaFile ->
                     ImageGridItem(
                         mediaFile = mediaFile,
                         onClick = { onImageClick(index) },

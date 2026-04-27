@@ -41,7 +41,7 @@ class GitHubRepository {
             val request = CreateRepoRequest(
                 name = "media-backup",
                 description = "Media backup for osskn媒体播放器",
-                private = true
+                isPrivate = true
             )
             val response = api.createRepository(token, request)
             if (response.isSuccessful || response.code() == 422) {
