@@ -121,6 +121,7 @@ fun FullScreenPlayer(
             Slider(
                 value = progress,
                 onValueChange = onSeekTo,
+                valueRange = 0f..1f,
                 modifier = Modifier.fillMaxWidth()
             )
             Row(

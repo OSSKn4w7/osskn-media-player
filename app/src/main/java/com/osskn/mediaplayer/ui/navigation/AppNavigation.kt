@@ -153,20 +153,21 @@ fun AppNavigation() {
                 route = Screen.MusicPlayer.route,
                 arguments = listOf(navArgument("mediaId") { type = NavType.StringType })
             ) { backStackEntry ->
-                val mediaId = backStackEntry.arguments?.getString("mediaId") ?: ""
+                val mediaId = backStackEntry.arguments?.getString("mediaId")?.toLongOrNull()
+                val mediaFile = musicFiles.find { it.id == mediaId }
                 FullScreenPlayer(
-                    mediaFile = currentPlaying,
+                    mediaFile = mediaFile,
                     isPlaying = isPlaying,
                     progress = progress,
                     currentPosition = 0,
-                    duration = currentPlaying?.duration ?: 0,
+                    duration = mediaFile?.duration ?: 0,
                     playMode = PlayMode.SEQUENCE,
                     onPlayPauseClick = { musicViewModel.togglePlayPause() },
                     onNextClick = { },
                     onPreviousClick = { },
                     onSeekTo = { musicViewModel.seekTo(it) },
                     onPlayModeClick = { },
-                    onFavoriteClick = { currentPlaying?.let { musicViewModel.toggleFavorite(it) } },
+                    onFavoriteClick = { mediaFile?.let { musicViewModel.toggleFavorite(it) } },
                     onCloseClick = { navController.popBackStack() }
                 )
             }
@@ -174,9 +175,11 @@ fun AppNavigation() {
             composable(
                 route = Screen.VideoPlayer.route,
                 arguments = listOf(navArgument("mediaId") { type = NavType.StringType })
-            ) {
+            ) { backStackEntry ->
+                val mediaId = backStackEntry.arguments?.getString("mediaId")?.toLongOrNull()
+                val mediaFile = videoFiles.find { it.id == mediaId }
                 VideoPlayerScreen(
-                    mediaFile = null,
+                    mediaFile = mediaFile,
                     exoPlayer = null,
                     onBackClick = { navController.popBackStack() }
                 )
@@ -185,10 +188,12 @@ fun AppNavigation() {
             composable(
                 route = Screen.ImageViewer.route,
                 arguments = listOf(navArgument("mediaId") { type = NavType.StringType })
-            ) {
+            ) { backStackEntry ->
+                val mediaId = backStackEntry.arguments?.getString("mediaId")?.toIntOrNull() ?: 0
+                val initialIndex = if (imageFiles.isNotEmpty()) mediaId.coerceIn(0, imageFiles.size - 1) else 0
                 ImageViewer(
                     images = imageFiles,
-                    initialIndex = 0,
+                    initialIndex = initialIndex,
                     onBackClick = { navController.popBackStack() }
                 )
             }

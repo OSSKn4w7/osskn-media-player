@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import com.osskn.mediaplayer.model.MediaFile
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -37,7 +39,6 @@ fun ImageViewer(
             ZoomableImage(imageUri = images[page].uri)
         }
 
-        // 返回按钮
         IconButton(
             onClick = onBackClick,
             modifier = Modifier.align(Alignment.TopStart)
@@ -71,11 +72,18 @@ fun ZoomableImage(imageUri: String) {
             },
         contentAlignment = Alignment.Center
     ) {
-        // 占位符 - 实际使用 Coil 加载图片
-        Box(
+        AsyncImage(
+            model = imageUri,
+            contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.DarkGray)
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    translationX = offsetX,
+                    translationY = offsetY
+                ),
+            contentScale = ContentScale.Fit
         )
     }
 }

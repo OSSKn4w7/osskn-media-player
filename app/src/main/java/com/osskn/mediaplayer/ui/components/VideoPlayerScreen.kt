@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.ui.PlayerView
 import com.osskn.mediaplayer.model.MediaFile
@@ -31,7 +33,6 @@ fun VideoPlayerScreen(
 ) {
     var showControls by remember { mutableStateOf(true) }
     var isFastPlaying by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -45,30 +46,19 @@ fun VideoPlayerScreen(
                         } else {
                             exoPlayer?.play()
                         }
-                    },
-                    onPress = {
-                        showControls = true
                     }
                 )
             }
             .pointerInput(Unit) {
-                detectHorizontalDragGestures(
-                    onDragStart = { },
-                    onDragEnd = { },
-                    onDragCancel = { },
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        // 快进/快退逻辑
-                        exoPlayer?.let { player ->
-                            val currentPosition = player.currentPosition
-                            val seekTo = currentPosition + (dragAmount * 100).toLong()
-                            player.seekTo(seekTo.coerceAtLeast(0))
-                        }
+                detectHorizontalDragGestures { _, dragAmount ->
+                    exoPlayer?.let { player ->
+                        val currentPosition = player.currentPosition
+                        val seekTo = currentPosition + (dragAmount * 100).toLong()
+                        player.seekTo(seekTo.coerceAtLeast(0))
                     }
-                )
+                }
             }
     ) {
-        // 视频播放器
         exoPlayer?.let { player ->
             AndroidView(
                 factory = { ctx ->
@@ -84,7 +74,6 @@ fun VideoPlayerScreen(
             )
         }
 
-        // 控制层
         if (showControls) {
             VideoControls(
                 mediaFile = mediaFile,
@@ -112,7 +101,6 @@ private fun VideoControls(
     onFastPlayEnd: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        // 返回按钮
         IconButton(
             onClick = onBackClick,
             modifier = Modifier.align(Alignment.TopStart)
@@ -120,7 +108,6 @@ private fun VideoControls(
             Icon(Icons.Default.ArrowBack, contentDescription = "返回")
         }
 
-        // 标题
         mediaFile?.let {
             Text(
                 text = it.title,
@@ -130,7 +117,6 @@ private fun VideoControls(
             )
         }
 
-        // 长按右半屏倍速提示
         if (isFastPlaying) {
             Text(
                 text = "2x",
@@ -140,7 +126,6 @@ private fun VideoControls(
             )
         }
 
-        // 右半屏长按区域（倍速）
         Box(
             modifier = Modifier
                 .fillMaxSize()

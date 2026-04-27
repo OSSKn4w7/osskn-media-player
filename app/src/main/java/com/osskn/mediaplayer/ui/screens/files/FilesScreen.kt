@@ -53,7 +53,7 @@ fun FilesScreen(
                     }
                     IconButton(onClick = onScanClick) {
                         Icon(
-                            androidx.compose.material.icons.Icons.Default.Folder,
+                            Icons.Default.Folder,
                             contentDescription = "扫描"
                         )
                     }

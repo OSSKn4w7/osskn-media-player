@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     private fun loadSettings() {
         viewModelScope.launch {
-            dataStore.data.map { preferences ->
+            dataStore.data.collect { preferences ->
                 _backgroundPlay.value = preferences[BACKGROUND_PLAY_KEY] ?: true
                 _darkMode.value = preferences[DARK_MODE_KEY] ?: false
                 _autoUpload.value = preferences[AUTO_UPLOAD_KEY] ?: false

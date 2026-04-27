@@ -2,10 +2,10 @@ package com.osskn.mediaplayer.service
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.os.Build
 import androidx.media3.common.Player
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import com.osskn.mediaplayer.MainActivity
 
 class PlaybackService : MediaSessionService() {
     private var mediaSession: MediaSession? = null
@@ -23,7 +23,7 @@ class PlaybackService : MediaSessionService() {
     }
 
     private fun createPendingIntent(): PendingIntent {
-        val intent = Intent(this, Class.forName("com.osskn.mediaplayer.MainActivity"))
+        val intent = Intent(this, MainActivity::class.java)
         return PendingIntent.getActivity(
             this,
             0,

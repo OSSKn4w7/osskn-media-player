@@ -1,5 +1,6 @@
 package com.osskn.mediaplayer.data.remote
 
+import com.google.gson.annotations.SerializedName
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -18,15 +19,15 @@ data class GitHubUser(
 data class GitHubRepo(
     val id: Long,
     val name: String,
-    val full_name: String,
-    val private: Boolean,
-    val html_url: String
+    @SerializedName("full_name") val fullName: String,
+    @SerializedName("private") val isPrivate: Boolean,
+    @SerializedName("html_url") val htmlUrl: String
 )
 
 data class CreateRepoRequest(
     val name: String,
     val description: String = "Media backup for osskn媒体播放器",
-    val private: Boolean = true
+    @SerializedName("private") val isPrivate: Boolean = true
 )
 
 data class FileContent(
