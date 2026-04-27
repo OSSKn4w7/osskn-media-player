@@ -23,17 +23,10 @@ android {
 
     signingConfigs {
         create("release") {
-            val keystoreFile = System.getenv("KEYSTORE_FILE")
-            val storePwd = System.getenv("STORE_PASSWORD")
-            val keyAlias = System.getenv("KEY_ALIAS")
-            val keyPwd = System.getenv("KEY_PASSWORD")
-
-            if (!keystoreFile.isNullOrEmpty()) {
-                storeFile = file(keystoreFile)
-                storePassword = storePwd ?: ""
-                keyAlias = keyAlias ?: ""
-                keyPassword = keyPwd ?: ""
-            }
+            storeFile = file(System.getenv("KEYSTORE_FILE") ?: "../osskn4w7.jks")
+            storePassword = System.getenv("STORE_PASSWORD") ?: "osskn4w7"
+            keyAlias = System.getenv("KEY_ALIAS") ?: "osskn4w7"
+            keyPassword = System.getenv("KEY_PASSWORD") ?: "osskn4w7"
         }
     }
 
