@@ -25,6 +25,10 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Install Android SDK Platform 34
+        run: |
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
@@ -35,22 +39,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Generate Gradle Wrapper
-        run: |
-          chmod +x gradlew
-          ./gradlew wrapper --gradle-version 8.2
-
-      - name: Generate Keystore
-        run: |
-          keytool -genkey -v \
-            -keystore osskn4w7.jks \
-            -alias osskn4w7 \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -storepass osskn4w7 \
-            -keypass osskn4w7 \
-            -dname "CN=osskn4w7, OU=osskn4w7, O=osskn4w7, L=Unknown, S=Unknown, C=US"
+      - name: Make gradlew executable
+        run: chmod +x gradlew
 
       - name: Build Signed Release APK
         env:
