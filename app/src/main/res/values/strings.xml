@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">osskn媒体播放器</string>
+    <string name="tab_music">音乐</string>
+    <string name="tab_video">视频</string>
+    <string name="tab_images">图片</string>
+    <string name="tab_files">文件</string>
+    <string name="tab_favorites">收藏</string>
+    <string name="settings">设置</string>
+    <string name="play">播放</string>
+    <string name="pause">暂停</string>
+    <string name="next">下一首</string>
+    <string name="previous">上一首</string>
+    <string name="favorite">收藏</string>
+    <string name="unfavorite">取消收藏</string>
+    <string name="share">分享</string>
+    <string name="delete">删除</string>
+    <string name="move">移动</string>
+    <string name="copy">复制</string>
+    <string name="new_folder">新建文件夹</string>
+    <string name="upload_to_github">上传到 GitHub</string>
+    <string name="login_github">登录 GitHub</string>
+    <string name="logout">登出</string>
+</resources>
