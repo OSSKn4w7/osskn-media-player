@@ -138,9 +138,30 @@ fun AppNavigation() {
                     folders = folders,
                     files = files,
                     isLoading = filesIsLoading,
-                    onFolderClick = { },
-                    onFileClick = { },
-                    onNewFolderClick = { },
+                    onFolderClick = { folder ->
+                        // TODO: 打开文件夹浏览
+                    },
+                    onFileClick = { mediaFile ->
+                        // 根据文件类型跳转到对应播放器
+                        when (mediaFile.mediaType) {
+                            com.osskn.mediaplayer.model.MediaType.AUDIO -> {
+                                musicViewModel.playMusic(mediaFile)
+                                navController.navigate(Screen.MusicPlayer.createRoute(mediaFile.id.toString()))
+                            }
+                            com.osskn.mediaplayer.model.MediaType.VIDEO -> {
+                                navController.navigate(Screen.VideoPlayer.createRoute(mediaFile.id.toString()))
+                            }
+                            com.osskn.mediaplayer.model.MediaType.IMAGE -> {
+                                val index = imageFiles.indexOfFirst { it.id == mediaFile.id }
+                                if (index >= 0) {
+                                    navController.navigate(Screen.ImageViewer.createRoute(index.toString()))
+                                }
+                            }
+                        }
+                    },
+                    onNewFolderClick = { name, path ->
+                        filesViewModel.createFolder(name, path)
+                    },
                     onScanClick = { filesViewModel.scanMedia() }
                 )
             }

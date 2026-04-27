@@ -19,7 +19,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,24 +26,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.osskn.mediaplayer.viewmodel.SettingsViewModel
-import com.osskn.mediaplayer.viewmodel.GitHubViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
-    navController: NavController,
-    settingsViewModel: SettingsViewModel = viewModel(),
-    githubViewModel: GitHubViewModel = viewModel()
-) {
-    val backgroundPlay by settingsViewModel.backgroundPlay.collectAsState()
-    val darkMode by settingsViewModel.darkMode.collectAsState()
-    val autoUpload by settingsViewModel.autoUpload.collectAsState()
-    val isLoggedIn by githubViewModel.isLoggedIn.collectAsState()
-    val user by githubViewModel.user.collectAsState()
-    val isUploading by githubViewModel.isUploading.collectAsState()
+fun SettingsScreen(navController: NavController) {
+    var backgroundPlay by remember { mutableStateOf(true) }
+    var darkMode by remember { mutableStateOf(false) }
+    var autoUpload by remember { mutableStateOf(false) }
+    var githubLoggedIn by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -57,7 +47,6 @@ fun SettingsScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            // 播放设置
             Text(
                 text = "播放",
                 style = MaterialTheme.typography.titleMedium,
@@ -69,11 +58,10 @@ fun SettingsScreen(
                     title = "后台播放",
                     description = "退出应用后继续播放",
                     checked = backgroundPlay,
-                    onCheckedChange = { settingsViewModel.setBackgroundPlay(it) }
+                    onCheckedChange = { backgroundPlay = it }
                 )
             }
 
-            // 主题设置
             Text(
                 text = "主题",
                 style = MaterialTheme.typography.titleMedium,
@@ -85,11 +73,10 @@ fun SettingsScreen(
                     title = "深色模式",
                     description = "使用深色主题",
                     checked = darkMode,
-                    onCheckedChange = { settingsViewModel.setDarkMode(it) }
+                    onCheckedChange = { darkMode = it }
                 )
             }
 
-            // GitHub 设置
             Text(
                 text = "GitHub 备份",
                 style = MaterialTheme.typography.titleMedium,
@@ -97,8 +84,7 @@ fun SettingsScreen(
             )
 
             SettingsCard {
-                if (isLoggedIn && user != null) {
-                    // 已登录状态
+                if (githubLoggedIn) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -114,11 +100,11 @@ fun SettingsScreen(
                         )
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = user!!.name ?: user!!.login,
+                                text = "已登录",
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
-                                text = "@${user!!.login}",
+                                text = "@github_user",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -127,7 +113,7 @@ fun SettingsScreen(
                             text = "登出",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.clickable { githubViewModel.logout() }
+                            modifier = Modifier.clickable { githubLoggedIn = false }
                         )
                     }
 
@@ -135,30 +121,13 @@ fun SettingsScreen(
                         title = "自动上传",
                         description = "仅 Wi-Fi 下自动上传收藏文件",
                         checked = autoUpload,
-                        onCheckedChange = { settingsViewModel.setAutoUpload(it) }
+                        onCheckedChange = { autoUpload = it }
                     )
-
-                    if (isUploading) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .padding(end = 12.dp)
-                            )
-                            Text("上传中...")
-                        }
-                    }
                 } else {
-                    // 未登录状态
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { }
+                            .clickable { githubLoggedIn = true }
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -171,7 +140,6 @@ fun SettingsScreen(
                 }
             }
 
-            // 关于
             Text(
                 text = "关于",
                 style = MaterialTheme.typography.titleMedium,
